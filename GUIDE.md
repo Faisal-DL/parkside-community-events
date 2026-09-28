@@ -4,6 +4,56 @@ Your group deploys one demo app with PostHog, swaps tasks with a group that has 
 
 **Time:** 50 minutes, about 35 of them for the steps below.
 
+## Quick setup with Claude Code
+
+Open Claude Code in the folder where you keep your projects and paste the prompt below. Claude clones, configures and deploys the app for you. You pick your app, create your repo from the template, paste your PostHog token, and approve the Vercel and PostHog logins in your browser. Using another agent, or prefer to do it by hand? Follow the steps below instead.
+
+```text
+Set up the PostHog events and session replay exercise for me, from template to live Vercel deployment. Do everything you can yourself. Before each step, explain in one or two plain sentences what you're doing and why, so I can follow along.
+
+Only stop for my input at the three STOP points below. Whenever you run a command that opens a login or authorization page, tell me first that it opens in my default browser, what account to log in with, and which button to click. Then wait for the command to finish.
+
+Rules: PostHog is EU cloud only. Use only free tools. PostHog is already wired into the app, so don't change its code. Never print the token back to me, and never commit .env.local. If something fails, check the Troubleshooting table in GUIDE.md and fix it yourself where you can.
+
+STOP 1: Welcome me. Tell me that I need GitHub, Vercel (sign up with GitHub) and PostHog EU (eu.posthog.com/signup) accounts. Then ask which app my group got:
+- Northstar Neighborhood Service Desk: https://github.com/Faisal-DL/northstar-neighborhood-desk
+- Parkside Community Events: https://github.com/Faisal-DL/parkside-community-events
+
+STOP 2: Tell me how to create my repo from the template:
+1. Open the app's link and click "Use this template" → "Create a new repository".
+2. Pick my account as owner, name it (suggest northstar-desk or parkside-events), and choose Public.
+3. Click "Create repository", then paste the new repo's URL here.
+
+Then, without stopping: check that node -v is 20.9 or newer and git is installed. Clone the repo (if the clone is empty, wait a few seconds and git pull; GitHub fills template repos in with a short delay). cd into it, run npm install (the allowScripts warning is harmless), and start npm run dev in the background.
+
+STOP 3: Tell me the local URL (usually http://localhost:3000, but use whichever port the dev server picked) and to try one task from README.md. Then ask me to confirm that it works, and to paste my PostHog project token (eu.posthog.com → Settings → Project → Project token, starts with phc_).
+
+Then continue without stopping:
+
+4. Connect the app to PostHog:
+   - Copy .env.example to .env.local, set NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN to my token, and check that git status doesn't list .env.local.
+   - Restart the dev server.
+   - Check that session replay is on: GET https://eu-assets.i.posthog.com/array/<token>/config. If sessionRecording is false, tell me to turn on eu.posthog.com → Settings → Session replay → "Record user sessions", then check again.
+   - Tell me I can click through a task now and see it under Activity and Session replay in PostHog. New events can take a few minutes to show up.
+
+5. Register PostHog for the report later: claude mcp add --scope user --transport http posthog https://mcp.posthog.com/mcp (if a server named posthog already exists, keep it). Don't run claude mcp login; it needs an interactive terminal. I'll authenticate in step 7.
+
+6. Deploy with the Vercel CLI (no push is needed, because the code is unchanged):
+   - npx vercel login. Tell me first that a Vercel page opens in my default browser, and that I should log in with GitHub and confirm.
+   - npx vercel link --yes --project <repo name>
+   - npx vercel env add NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN production --value <token> --no-sensitive --yes (the project token is a public browser key)
+   - npx vercel deploy --prod --yes, then check that the production URL returns HTTP 200.
+
+7. Finish with a short summary:
+   - My live URL, and the three tasks from README.md to choose from when I give the other group a task. Mention that the Vercel project is connected to my GitHub repo, so future pushes redeploy automatically.
+   - Next steps:
+     1. Swap tasks with the other group.
+     2. Restart Claude Code in the repo folder, type /mcp, select posthog → Authenticate. A PostHog page opens in my default browser: choose Read-only and click Authorize.
+     3. Wait a few minutes after the other group finishes, then ask: Write a PostHog task report for the other group's "<task>" attempt on my deployed app <URL>, started around <time and timezone>.
+```
+
+When Claude is done, continue at **6. Swap tasks with the other group**.
+
 ## Prerequisites
 
 - **GitHub** account.
