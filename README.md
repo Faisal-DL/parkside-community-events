@@ -23,11 +23,11 @@ The garden walk is deliberately full, but two events have places open. The reset
 
 ## Exercise
 
-Follow [GUIDE.md](GUIDE.md): create your repo from this template, add PostHog (EU cloud), deploy to Vercel, swap tasks with the other group, and generate a replay-linked report with the included `posthog-task-report` skill.
+Follow [GUIDE.md](GUIDE.md): create your repo from this template, add your PostHog (EU cloud) project token, deploy to Vercel, swap tasks with the other group, and generate a replay-linked report with the included `posthog-task-report` skill.
 
-## PostHog integration point
+## PostHog
 
-The base app has no PostHog dependency or credentials and runs before instrumentation. [`src/lib/analytics.ts`](src/lib/analytics.ts) contains a `journeyEvent` hook already called at each task's start and completion. The guide shows how to connect it to `posthog.capture` with a timestamped `replay_url` from [`posthog.get_session_replay_url()`](https://posthog.com/docs/references/posthog-js). The six journey event names are:
+PostHog is already wired in and stays off until you set `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` (copy `.env.example` to `.env.local` locally, and add the same variable in Vercel). [`instrumentation-client.ts`](instrumentation-client.ts) starts PostHog with autocapture and session replay, and [`next.config.ts`](next.config.ts) routes its traffic through the app's `/ingest` path so ad blockers rarely block it. [`src/lib/analytics.ts`](src/lib/analytics.ts) sends each task's start and finish event with a timestamped `replay_url`. The six task events are:
 
 | Flow | Start | Finish |
 | --- | --- | --- |
@@ -35,4 +35,4 @@ The base app has no PostHog dependency or credentials and runs before instrument
 | Check a place | `lookup_started` | `lookup_completed` |
 | Suggest an event | `suggestion_started` | `suggestion_completed` |
 
-The app sends no personal data by itself. Use invented details, and review [PostHog's replay privacy controls](https://posthog.com/docs/session-replay/privacy) before recording real users.
+The app sends no personal data by itself. Inputs are masked in replays by default. Use invented details, and review [PostHog's replay privacy controls](https://posthog.com/docs/session-replay/privacy) before recording real users.
