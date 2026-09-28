@@ -1,5 +1,5 @@
 // Connect this hook to posthog.capture after running PostHog's Install with AI wizard.
-// Include replay_url: posthog.get_session_replay_url() in the event properties.
+// Include replay_url: posthog.get_session_replay_url({ withTimestamp: true, timestampLookBack: 5 }).
 export function journeyEvent(name: string, properties?: Record<string, string>) {
   void name;
   void properties;
