@@ -23,11 +23,13 @@ The garden walk is deliberately full, but two events have places open. The reset
 
 ## Deploy on Vercel
 
-Fork the repository, import the fork into your own Vercel account, and deploy with the detected Next.js preset. The base app needs no environment variables.
+Fork and clone the repository. After adding PostHog, commit and push your changes, then import the fork into your own Vercel account. Use the detected Next.js preset and add the wizard's `NEXT_PUBLIC_` PostHog values before deploying. The base app needs no environment variables.
 
 ## PostHog integration point
 
-The base app intentionally has no PostHog credentials. [`src/lib/analytics.ts`](src/lib/analytics.ts) contains a `journeyEvent` hook already called at each task's start and completion. After running [PostHog's Install with AI wizard](https://posthog.com/docs/session-replay/installation), connect it to `posthog.capture(name, properties)` and verify autocapture and session replay.
+The base app intentionally has no PostHog credentials. [`src/lib/analytics.ts`](src/lib/analytics.ts) contains a `journeyEvent` hook already called at each task's start and completion. After running [PostHog's Install with AI wizard](https://posthog.com/docs/session-replay/installation), ask your coding agent to connect it to `posthog.capture(name, properties)`, include a `replay_url` property from [`posthog.get_session_replay_url()`](https://posthog.com/docs/references/posthog-js) on each journey event, and verify autocapture and session replay. The reporting skill uses the URL to link directly to the matching private replay.
+
+Suggested agent prompt: “Connect `src/lib/analytics.ts` to the PostHog client installed by the wizard. Preserve all existing journey event names and properties, add `replay_url` from `posthog.get_session_replay_url()` to each event, and keep user-entered text out of event properties. Check that a start and finish event, autocaptured clicks, and a replay appear for one local test flow. Run the build and tell me which `NEXT_PUBLIC_` values to add in Vercel.”
 
 | Flow | Start | Finish |
 | --- | --- | --- |
