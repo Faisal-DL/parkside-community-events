@@ -13,7 +13,7 @@ Open `http://localhost:3000`. Check the production build with `npm run build`.
 
 ## Ready-to-use tasks
 
-| Task for a partner | Starting point | Completed when |
+| Task for the other group | Starting point | Completed when |
 | --- | --- | --- |
 | Join the neighborhood repair café | Join an event | An `EV-…` reference appears |
 | Check an existing place | Check a place; `EV-2042` is prefilled | Booking details appear |
@@ -23,7 +23,7 @@ The garden walk is deliberately full, but two events have places open. The reset
 
 ## Exercise
 
-Follow [GUIDE.md](GUIDE.md) step by step: create your own copy with **Use this template**, add PostHog, deploy to Vercel, swap tasks with your partner, and generate a replay-linked report with the included `posthog-task-report` skill.
+Follow [GUIDE.md](GUIDE.md): create your repo from this template, add PostHog (EU cloud), deploy to Vercel, swap tasks with the other group, and generate a replay-linked report with the included `posthog-task-report` skill.
 
 ## PostHog integration point
 
